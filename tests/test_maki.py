@@ -2,22 +2,32 @@ from unittest import TestCase
 
 from maki import MakiMarker
 
+import os
+
+OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
+
 
 class MakiMarkerTest(TestCase):
+    def setUp(self):
+        if not os.path.exists(OUTPUT_DIR):
+            os.makedirs(OUTPUT_DIR)
+
     def test_marker(self):
         filenames = []
         for size in "sl":
             for symbol in ["beer", "airfield", "park", "park-alt1", "music"]:
                 filenames.append(None)
                 for tint in ["3388ff", "800080", "888", "000080", "fefefe"]:
+
                     fname = f"test-{size}-{symbol}-{tint}.svg"
                     png = f"test-{size}-{symbol}-{tint}.png"
                     filenames.append(fname)
                     marker = MakiMarker(size=size, tint=tint, symbol=symbol)
-                    open(fname, "w").write(marker.svg())
-                    open(png, "wb").write(marker.png())
 
-        open("test.html", "w").write(
+                    open(os.path.join(OUTPUT_DIR, fname), "w").write(marker.svg())
+                    open(os.path.join(OUTPUT_DIR, png), "wb").write(marker.png())
+
+        open(os.path.join(OUTPUT_DIR, "test.html"), "w").write(
             " ".join(map(lambda x: "" if x is None else f'<img src="{x}" />', filenames))
         )
 

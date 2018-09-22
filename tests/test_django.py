@@ -19,7 +19,6 @@ class DjangoViewTest(TestCase):
             "pin-l-park.png",
             "pin-l.png",
             "pin-l@2x.png",
-
             "pin-l.svg",
         ]
         for name in valid:
@@ -29,7 +28,7 @@ class DjangoViewTest(TestCase):
         invalid = [
             ("pin-l-park-alt1+3388ff@2x.svg", "@2x suffix only valid for png."),
             ("pin-m.png", "Marker name must start with pin-s or pin-l"),
-            ("pin-l.jpg", "Format must be png or svg")
+            ("pin-l.jpg", "Format must be png or svg"),
         ]
 
         for name, expected_msg in invalid:

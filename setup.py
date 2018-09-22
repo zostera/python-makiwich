@@ -23,7 +23,9 @@ if sys.argv[-1] == "tag":
 setup(
     name=package_name,
     version=VERSION,
-    description="Create ",
+    description="Create markers with maki icons for leaflet",
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
     url="https://github.com/zostera/python-makiwich",
     author="Jan Pieter Waagmeester",
     author_email="jieter@zostera.nl",

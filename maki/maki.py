@@ -10,6 +10,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 @lru_cache()
 def svg_dict(name):
+    """
+    Turn a svg into a dict structure, and cache requests.
+    """
     filename = os.path.join(BASE_DIR, "img", name)
     with open(filename) as svg:
         return xmltodict.parse(svg.read())
@@ -19,13 +22,23 @@ DEFAULT_BLACK = "#000"
 DEFAULT_WHITE = "#fff"
 
 
-def pprint(xml):
-    import json
-
-    print(json.dumps(xml, indent=4))
-
-
 class MakiMarker(object):
+    """
+    Generate SVG/PNG files for Maki markers to use with web mapping libraries.
+
+    argument:
+        tint (str): Any hex string to change the background color for the marker.
+        symbol (str): Name of a Maki icon, defaults to a filled circle.
+        size (str): "l" or "s" for large or small markers.
+
+    Example:
+
+        >>> from maki import MakiMarker
+        >>> marker = MakiMarker(symbol="park", tint="#3388ff")
+        >>> marker.svg()
+        '<?xml version=...'
+
+    """
     def __init__(self, tint="#000", symbol=None, size="l"):
         self.tint = tint
         self.size = "large" if size == "l" else "small"
@@ -41,14 +54,15 @@ class MakiMarker(object):
 
     def svg(self):
         marker = self.background_marker()
-
-        basepaths = list(marker["svg"]["g"]["g"]["g"])
+        basepaths = marker["svg"]["g"]["g"]["g"]
 
         if self.symbol:
             try:
                 icon = self.maki_icon()["svg"]["path"]
                 basepaths[3]["path"] = {"@id": "icon", "@d": icon["@d"]}
             except KeyError as e:
+                # some icons have a <g>-tag containing paths. They seem to need a slightly different
+                # treatment.
                 icon = self.maki_icon()["svg"]["g"]
                 basepaths[3] = {"@id": "maki", "g": icon["g"], "@transform": "translate(6, 7)"}
 
@@ -57,6 +71,7 @@ class MakiMarker(object):
             except IndexError:
                 pass
 
+            # move single-char svg's to the center
             if len(self.symbol) == 1:
                 x, y = (9, 7) if self.size == "small" else (10, 8)
                 basepaths[3]["@transform"] = f"translate(x, y)"
@@ -75,10 +90,10 @@ class MakiMarker(object):
         else:
             basepaths[3]["@fill"] = foreground_color
 
-        marker["svg"]["g"]["g"]["g"] = basepaths
+        # marker["svg"]["g"]["g"]["g"] = basepaths
         return xmltodict.unparse(marker)
 
-    def png(self):
+    def png(self, **kwargs):
         import cairosvg
 
-        return cairosvg.svg2png(bytestring=self.svg().encode())
+        return cairosvg.svg2png(bytestring=self.svg().encode(), **kwargs)

@@ -24,12 +24,13 @@ class MakiMarkerTest(TestCase):
                     filenames.append(fname)
                     marker = MakiMarker(size=size, tint=tint, symbol=symbol)
 
-                    open(os.path.join(OUTPUT_DIR, fname), "w").write(marker.svg())
-                    open(os.path.join(OUTPUT_DIR, png), "wb").write(marker.png())
+                    with open(os.path.join(OUTPUT_DIR, fname), "w") as out:
+                        out.write(marker.svg())
+                    with open(os.path.join(OUTPUT_DIR, png), "wb") as out:
+                        out.write(marker.png())
 
-        open(os.path.join(OUTPUT_DIR, "test.html"), "w").write(
-            " ".join(map(lambda x: "" if x is None else f'<img src="{x}" />', filenames))
-        )
+        with open(os.path.join(OUTPUT_DIR, "test.html"), "w") as out:
+            out.write(" ".join(map(lambda x: "" if x is None else f'<img src="{x}" />', filenames)))
 
         MakiMarker(symbol="beer").svg()
         MakiMarker(symbol="globe").svg()

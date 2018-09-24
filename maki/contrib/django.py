@@ -29,15 +29,13 @@ def maki_icon(request, name):
     if not name[:5] in ["pin-s", "pin-l"]:
         raise Http404("Marker name must start with pin-s or pin-l")
 
-    kwargs = {
-        "size": name[4]
-    }
+    kwargs = {"size": name[4]}
     if not name[-3:] in ["svg", "png"]:
         raise Http404("Format must be png or svg")
 
     remainder = name[5:-4]
     pngkwargs = {}
-    if remainder.endswith('@2x'):
+    if remainder.endswith("@2x"):
         if name.endswith(".svg"):
             raise Http404("@2x suffix only valid for png.")
         pngkwargs["scale"] = 2
@@ -56,4 +54,4 @@ def maki_icon(request, name):
 
     # print(kwargs)
     icon = MakiMarker(**kwargs)
-    return HttpResponse(icon.png(**pngkwargs) if name.endswith('png') else icon.svg())
+    return HttpResponse(icon.png(**pngkwargs) if name.endswith("png") else icon.svg())

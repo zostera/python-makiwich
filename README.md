@@ -1,6 +1,9 @@
 # python-makiwich
 
-python port of https://github.com/mapbox/makiwich
+- python port of https://github.com/mapbox/makiwich
+- Uses CC0 [Maki icons](https://github.com/mapbox/maki/)
+- Dependencies: [xmltodict](https://pypi.org/project/xmltodict/), for PNG export: [cairosvg](https://pypi.org/project/CairoSVG/)
+- Contains Django view to serve icons in `maki.contrib.django.maki_icon`
 
 The icons are not included in this repository, so building the package requires downloading the [Maki icons](https://www.mapbox.com/maki-icons/):
 
@@ -8,7 +11,6 @@ The icons are not included in this repository, so building the package requires 
 curl -L https://github.com/mapbox/maki/archive/master.zip -o maki-master.zip
 unzip -qj maki-master.zip 'maki-master/icons/*' -d maki/img/icons/
 ```
-
 
 # usage
 

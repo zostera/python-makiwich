@@ -34,7 +34,7 @@ class DjangoViewTest(TestCase):
             ("pin-l-park-alt1+3388ff@2x.svg", "@2x suffix only valid for png."),
             ("pin-m.png", "Marker name must start with pin-s or pin-l"),
             ("pin-l.jpg", "Format must be png or svg"),
-            ("pin-l-mail.png", "Symbol 'mail' does not exist")
+            ("pin-l-mail.png", "Symbol 'mail' does not exist"),
         ]
 
         for name, expected_msg in invalid:

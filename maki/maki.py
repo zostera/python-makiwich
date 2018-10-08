@@ -1,5 +1,6 @@
 import os
 from functools import lru_cache
+from copy import deepcopy
 
 import xmltodict
 
@@ -46,14 +47,14 @@ class MakiMarker(object):
         self.symbol = symbol
 
     def background_marker(self):
-        return svg_dict(f"marker-{self.size}.svg").copy()
+        return deepcopy(svg_dict(f"marker-{self.size}.svg"))
 
     def maki_icon(self):
         size = 11 if self.size == "small" else 15
         symbol = os.path.join("icons", f"{self.symbol}-{size}.svg")
 
         try:
-            return svg_dict(symbol).copy()
+            return deepcopy(svg_dict(symbol))
         except FileNotFoundError:
             raise ValueError(f"Symbol '{self.symbol}' does not exist")
 
@@ -64,8 +65,16 @@ class MakiMarker(object):
         if self.symbol:
             try:
                 icon = self.maki_icon()["svg"]["path"]
-                basepaths[3]["path"] = {"@id": "icon", "@d": icon["@d"]}
-            except KeyError as e:
+                try:
+                    basepaths[3]["path"] = {"@id": "icon", "@d": icon["@d"]}
+                except TypeError:
+                    # some icons wrap the OrderedDict in a list, add them all in a g
+                    basepaths[3] = {
+                        "@id": "maki",
+                        "g": [{"path": {"@d": i["@d"]}} for i in icon],
+                        "@transform": "translate(6, 7)",
+                    }
+            except KeyError:
                 # some icons have a <g>-tag containing paths. They seem to need a slightly different
                 # treatment.
                 icon = self.maki_icon()["svg"]["g"]

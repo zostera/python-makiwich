@@ -15,13 +15,17 @@ class MakiMarkerTest(TestCase):
     def test_marker(self):
         filenames = []
         for size in "sl":
-            for symbol in ["beer", "airfield", "park", "park-alt1", "music"]:
-                filenames.append(None)
+            filenames.append("<br />")
+            for symbol in ["beer", "airfield", "park", "park-alt1", "music", "bakery"]:
+                filenames.append(
+                    f'<br /><span style="display: inline-block; width: 70px;">{symbol}:</span>'
+                )
                 for tint in ["3388ff", "800080", "888", "000080", "fefefe"]:
 
                     fname = f"test-{size}-{symbol}-{tint}.svg"
                     png = f"test-{size}-{symbol}-{tint}.png"
                     filenames.append(fname)
+                    filenames.append(png)
                     marker = MakiMarker(size=size, tint=tint, symbol=symbol)
 
                     with open(os.path.join(OUTPUT_DIR, fname), "w") as out:
@@ -30,7 +34,16 @@ class MakiMarkerTest(TestCase):
                         out.write(marker.png())
 
         with open(os.path.join(OUTPUT_DIR, "test.html"), "w") as out:
-            out.write(" ".join(map(lambda x: "" if x is None else f'<img src="{x}" />', filenames)))
+            out.write(
+                " ".join(
+                    map(
+                        lambda x: x
+                        if not (x.endswith("svg") or x.endswith("png"))
+                        else f'<img src="{x}" />',
+                        filenames,
+                    )
+                )
+            )
 
         MakiMarker(symbol="beer").svg()
         MakiMarker(symbol="globe").svg()

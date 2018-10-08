@@ -53,8 +53,12 @@ def maki_icon(request, name):
         kwargs["symbol"] = remainder
 
     icon = MakiMarker(**kwargs)
+
     return_png = name.endswith("png")
-    return HttpResponse(
-        icon.png(**pngkwargs) if return_png else icon.svg(),
-        content_type="image/png" if return_png else "image/svg+xml",
-    )
+    try:
+        return HttpResponse(
+            icon.png(**pngkwargs) if return_png else icon.svg(),
+            content_type="image/png" if return_png else "image/svg+xml",
+        )
+    except ValueError as e:
+        raise Http404(str(e))

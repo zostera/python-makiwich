@@ -51,7 +51,11 @@ class MakiMarker(object):
     def maki_icon(self):
         size = 11 if self.size == "small" else 15
         symbol = os.path.join("icons", f"{self.symbol}-{size}.svg")
-        return svg_dict(symbol).copy()
+
+        try:
+            return svg_dict(symbol).copy()
+        except FileNotFoundError:
+            raise ValueError(f"Symbol '{self.symbol}' does not exist")
 
     def svg(self):
         marker = self.background_marker()

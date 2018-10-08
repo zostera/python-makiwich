@@ -2,10 +2,13 @@
 
 import os
 import sys
+import re
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
-from maki import VERSION
+# get version without importing
+with open("maki/__init__.py", "rb") as f:
+    VERSION = str(re.search('__version__ = "(.+?)"', f.read().decode("utf-8")).group(1))
 
 package_name = "python-makiwich"
 
@@ -38,7 +41,7 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
     keywords="Maki icon markers",
-    packages=find_packages(exclude="tests.*"),
+    packages=["maki", "maki.contrib"],
     install_requires=["xmltodict"],
     package_data={"maki": ["maki/img/*.svg", "maki/img/icons/*.svg"]},
 )

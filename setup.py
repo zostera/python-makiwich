@@ -43,5 +43,6 @@ setup(
     keywords="Maki icon markers",
     packages=["maki", "maki.contrib"],
     install_requires=["xmltodict"],
+    include_package_data=True,
     package_data={"maki": ["maki/img/*.svg", "maki/img/icons/*.svg"]},
 )

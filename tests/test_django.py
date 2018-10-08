@@ -24,6 +24,11 @@ class DjangoViewTest(TestCase):
         for name in valid:
             response = maki_icon({}, name)
 
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(
+                response["Content-Type"], "image/png" if name.endswith(".png") else "image/svg+xml"
+            )
+
     def test_invalid(self):
         invalid = [
             ("pin-l-park-alt1+3388ff@2x.svg", "@2x suffix only valid for png."),
@@ -32,7 +37,7 @@ class DjangoViewTest(TestCase):
         ]
 
         for name, expected_msg in invalid:
-            with self.assertRaisesRegex(Http404, expected_msg):
-                response = maki_icon({}, name)
-            # print(ex, dir(ex.exception))
-            # self.assertEqual(ex.exception.msg, expected_msg)
+            with self.assertRaisesRegex(Http404, expected_msg) as ex:
+                maki_icon({}, name)
+
+            self.assertEqual(str(ex.exception), expected_msg)

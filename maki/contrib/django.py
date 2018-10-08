@@ -52,6 +52,9 @@ def maki_icon(request, name):
     else:
         kwargs["symbol"] = remainder
 
-    # print(kwargs)
     icon = MakiMarker(**kwargs)
-    return HttpResponse(icon.png(**pngkwargs) if name.endswith("png") else icon.svg())
+    return_png = name.endswith("png")
+    return HttpResponse(
+        icon.png(**pngkwargs) if return_png else icon.svg(),
+        content_type="image/png" if return_png else "image/svg+xml",
+    )

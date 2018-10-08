@@ -2,7 +2,7 @@
 from .maki import MakiMarker
 from .color import Color
 
-VERSION = "0.0.2"
+VERSION = "0.0.3"
 
 
 __all__ = ("MakiMarker", "Color")

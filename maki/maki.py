@@ -39,6 +39,7 @@ class MakiMarker(object):
         '<?xml version=...'
 
     """
+
     def __init__(self, tint="#000", symbol=None, size="l"):
         self.tint = tint
         self.size = "large" if size == "l" else "small"

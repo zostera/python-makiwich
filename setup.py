@@ -3,7 +3,7 @@
 import os
 import sys
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 from maki import VERSION
 
@@ -38,7 +38,7 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
     keywords="Maki icon markers",
-    packages=["maki"],
+    packages=find_packages(exclude="tests.*"),
     install_requires=["xmltodict"],
     package_data={"maki": ["maki/img/*.svg", "maki/img/icons/*.svg"]},
 )
